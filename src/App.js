@@ -4,16 +4,25 @@ import Todos from "./Todos";
 import Form from "./Form";
 
 export default class App extends Component {
-    state = {
-        inputValue: "",
-        todos: [],
-        error: false,
-        message: ""
-    };
-    handleAddBtn = () => {
+    constructor(props) {
+        super(props);
+        this.state = {
+            inputValue: "",
+            todos: [],
+            error: false,
+            message: ""
+        };
+        // this.handleInputChange = this.handleInputChange.bind(this);
+    }
+    handleAddBtn = e => {
+        e.preventDefault();
         const { todos, inputValue } = this.state;
+        const id = Math.floor(Math.random() * 1000 + 1);
         if (inputValue) {
-            const todoItems = [...todos, { item: this.state.inputValue }];
+            const todoItems = [
+                ...todos,
+                { id: id, item: this.state.inputValue, isCompleted: false }
+            ];
             this.setState({
                 todos: todoItems,
                 inputValue: ""
@@ -32,6 +41,9 @@ export default class App extends Component {
             message: ""
         });
     };
+    handleSecondButton = () => {
+        alert("Second Button Clicked");
+    };
     render() {
         const { inputValue, error, message, todos } = this.state;
         return (
@@ -46,8 +58,9 @@ export default class App extends Component {
                             <div className="card-body">
                                 <Form
                                     value={inputValue}
-                                    onChange={this.handleInputChange}
-                                    onClick={this.handleAddBtn}
+                                    onInputChange={this.handleInputChange}
+                                    onFormSubmit={this.handleAddBtn}
+                                    onSecondButtonClick={this.handleSecondButton}
                                 />
                                 {error && <div className="alert alert-danger">{message}</div>}
                                 <Todos todos={todos} />
